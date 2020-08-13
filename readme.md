@@ -1,5 +1,7 @@
 # Lagom-pb Protobufs
 
+![ci](https://github.com/super-flat/lagom-pb-protos/workflows/ci/badge.svg)
+
 This is the monorepo housing all the protobuf definitions of [lagom-pb](https://github.com/super-flat/lagom-pb)
 
 It will help any application that needs to directly read the journal to just compile the corresponding proto messages
