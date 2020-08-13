@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package lagompb.v1;
+
+option java_package = "io.superflat.lagompb.v1.protobuf";
+
+// wrapper for the encrypted Any message
+message EncryptedProto {
+  // information about the encryption/decryption, like the ID of the key used
+  map<string, string> encryption_meta = 1;
+
+  // encrypted message
+  bytes encrypted_proto = 2;
+}
