@@ -2,7 +2,7 @@ syntax = "proto2";
 
 package lagompb.v1;
 
-option java_package = "io.superflat.lagompb.v1.protobuf";
+option java_package = "io.superflat.lagompb.protobuf.v1";
 
 import "google/protobuf/descriptor.proto";
 
