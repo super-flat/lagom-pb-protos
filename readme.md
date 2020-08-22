@@ -1,4 +1,4 @@
-# Lagom-pb Protobufs
+# lagom-pb protobufs
 
 ![ci](https://github.com/super-flat/lagom-pb-protos/workflows/ci/badge.svg)
 
