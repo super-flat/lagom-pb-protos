@@ -1,6 +1,6 @@
 # lagom-pb protobufs
 
-![ci](https://github.com/super-flat/lagom-pb-protos/workflows/ci/badge.svg)
+[![Build Status](https://travis-ci.org/super-flat/lagom-pb-protos.svg?branch=master)](https://travis-ci.org/super-flat/lagom-pb-protos)
 
 This is the monorepo housing all the protobuf definitions of [lagom-pb](https://github.com/super-flat/lagom-pb)
 
