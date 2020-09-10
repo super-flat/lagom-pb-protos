@@ -41,7 +41,7 @@ message FailureResponse {
     // A error handler must be implemented to handle this type of errors.
     // When an cutom error is sent and there is no error handler then the error
     // will be handled as if it were a critical failure type
-    google.protobuf.Any custom_error = 2;
+    google.protobuf.Any custom = 2;
     // Validation failure type will result into 3-INVALID_ARGUMENT for a gRPC
     // call and 400-Bad Request for an HTTP/Json call
     google.protobuf.StringValue validation = 3;
