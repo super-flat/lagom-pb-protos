@@ -2,11 +2,16 @@ syntax = "proto3";
 
 package lagompb.v1;
 
+option csharp_namespace = "Lagompb.V1";
+option go_package = "lagompbv1";
+option java_multiple_files = true;
+option java_outer_classname = "CoreProto";
 option java_package = "io.superflat.lagompb.protobuf.v1";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 //  Helper protobuf for serializing the command and akka actor reference
 //    during command serde between actors. This is needed to design lagom
@@ -24,35 +29,38 @@ message CommandWrapper {
   map<string, string> data = 3;
 }
 
-// For returning a command reply whether it is successful or failed
-message CommandReply {
-  // the actual command reply
-  oneof reply {
-    // success command reply
-    SuccessfulReply successful_reply = 1;
-    // failed command reply
-    FailedReply failed_reply = 2;
+// FailureResponse. This response type is returned by the
+// Commands Handler
+message FailureResponse {
+  // the failure type
+  oneof failure_type {
+    // Critical failure will result into an 13-INTERNAL for a gRPC call and
+    // 500-Internal Server Error for a HTTP/Json call
+    google.protobuf.StringValue critical = 1;
+    // Custom error details will be handled by the implementor.
+    // A error handler must be implemented to handle this type of errors.
+    // When an cutom error is sent and there is no error handler then the error
+    // will be handled as if it were a critical failure type
+    google.protobuf.Any custom_error = 2;
+    // Validation failure type will result into 3-INVALID_ARGUMENT for a gRPC
+    // call and 400-Bad Request for an HTTP/Json call
+    google.protobuf.StringValue validation = 3;
+    // Not found failure type will result into 5-NOT_FOUND for a gRPC call and
+    // a 404-Not Found for an HTTP/Json call
+    google.protobuf.StringValue not_found = 4;
   }
 }
 
-// For returning successful command reply
-message SuccessfulReply {
-  // actual state is wrapped with meta data
-  StateWrapper state_wrapper = 1;
-}
-
-// For returning failed command reply
-message FailedReply {
-  string reason = 1;
-  FailureCause cause = 2;
-}
-
-// For every reject command reply there is an associated reject type
-// that will help make the distinction between the rejection.
-// This will be very useful for api and grpc responses
-enum FailureCause {
-  VALIDATION_ERROR = 0;
-  INTERNAL_ERROR = 1;
+// For returning a command reply whether it is successful or failed
+// This is used internally by lagom-pb
+message CommandReply {
+  // the actual command reply
+  oneof reply {
+    // actual state is wrapped with meta data
+    StateWrapper state_wrapper = 1;
+    // failed command reply
+    FailureResponse failure = 2;
+  }
 }
 
 // Additional data for the
@@ -88,53 +96,15 @@ message EventWrapper {
   MetaData meta = 3;
 }
 
-// KafkaEvent holds all events for a particular service
-// the events will be persisted into kafka
-message KafkaEvent {
-  // the service name
-  string service_name = 1;
-  // the kafka partition key
-  string partition_key = 2;
-  // the actual event
-  google.protobuf.Any event = 3;
-  // the actual state with state meta
-  StateWrapper state = 4;
-}
-
 // Response sent by a command handler after processing a command.
-// With this response will emit an event wrapped in EventWrapper that will be
-// persisted onto the journal store and a reply will be sent to the sender of
-// the command.
-message SuccessCommandHandlerResponse {
-  oneof response {
-    // this help push the current state without persisting
-    // an event
-    google.protobuf.Empty no_event = 1;
-    // the actual event
-    google.protobuf.Any event = 2;
-  }
-}
-
-// Response sent by a command handler after processing a command.
-// This response will not emit any Event. However an reply will be sent to the
-// sender of the command.
-message FailedCommandHandlerResponse {
-  // command handler failed reason
-  string reason = 1;
-  // cause of the failure
-  FailureCause cause = 2;
-}
-
-// Response sent by a command handler after processing a command.
-// The possible responses can be:
-//      - SuccessCommandHandlerResponse
-//      - FailedCommandHandlerResponse
 message CommandHandlerResponse {
   // actual command handler response
-  oneof handler_response {
-    // successful command handler response
-    SuccessCommandHandlerResponse success_response = 1;
-    // failed command handler response
-    FailedCommandHandlerResponse failed_response = 2;
+  oneof response {
+    // this help push the current state without persisting an event
+    google.protobuf.Empty no_event = 1;
+    // the actual event to be persisted
+    google.protobuf.Any event = 2;
+    // the failed response
+    FailureResponse failure = 3;
   }
 }

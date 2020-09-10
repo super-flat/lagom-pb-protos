@@ -2,6 +2,10 @@ syntax = "proto3";
 
 package lagompb.v1;
 
+option csharp_namespace = "Lagompb.V1";
+option go_package = "lagompbv1";
+option java_multiple_files = true;
+option java_outer_classname = "EncryptionProto";
 option java_package = "io.superflat.lagompb.protobuf.v1";
 
 // wrapper for the encrypted Any message
