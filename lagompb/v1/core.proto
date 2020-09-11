@@ -9,7 +9,6 @@ option java_outer_classname = "CoreProto";
 option java_package = "io.superflat.lagompb.protobuf.v1";
 
 import "google/protobuf/any.proto";
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -100,11 +99,9 @@ message EventWrapper {
 message CommandHandlerResponse {
   // actual command handler response
   oneof response {
-    // this help push the current state without persisting an event
-    google.protobuf.Empty no_event = 1;
     // the actual event to be persisted
-    google.protobuf.Any event = 2;
+    google.protobuf.Any event = 1;
     // the failed response
-    FailureResponse failure = 3;
+    FailureResponse failure = 2;
   }
 }
