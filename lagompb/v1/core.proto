@@ -25,7 +25,7 @@ message CommandWrapper {
   // the actor ref
   bytes actor_ref = 2;
   // additional data to be added to the state meta
-  map<string, string> data = 3;
+  map<string, google.protobuf.Any> data = 3;
 }
 
 // FailureResponse. This response type is returned by the
