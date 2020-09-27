@@ -73,7 +73,7 @@ message MetaData {
   // the time the state has been modified
   google.protobuf.Timestamp revision_date = 3;
   // use to store additional data.
-  map<string, string> data = 4;
+  map<string, google.protobuf.Any> data = 4;
 }
 
 // Wrap the aggregate state and the meta data.
